@@ -1,0 +1,438 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Regalos de Navidad para niños</title>
+<meta name="description" content="Elige a un niño o niña y comprométete con su regalo de Navidad.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,800&family=Source+Sans+3:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+/* Layout: encabezado con avance, barra de filtros, grilla de tarjetas disponibles; "mis compromisos" arriba; panel de administración al final solo para editores. */
+:root{
+  --bg:#f4f6f3; --surface:#ffffff; --ink:#1c2a22; --muted:#5d6b62; --line:#dde3dc;
+  --accent:#1f5c3d; --accent-ink:#ffffff; --accent-soft:#e3efe7;
+  --ribbon:#b3263a; --ribbon-soft:#f8e3e6; --gold:#b8862b;
+  --font-display:"Bricolage Grotesque", "Segoe UI", system-ui, sans-serif;
+  --font-body:"Source Sans 3", "Segoe UI", system-ui, sans-serif;
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#121a15; --surface:#1a241e; --ink:#e7eee9; --muted:#9db0a3; --line:#2b3a31;
+    --accent:#5fbf8a; --accent-ink:#0d1a12; --accent-soft:#1f3328;
+    --ribbon:#ef6b7d; --ribbon-soft:#3a1e24; --gold:#e0b45a; color-scheme: dark;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#121a15; --surface:#1a241e; --ink:#e7eee9; --muted:#9db0a3; --line:#2b3a31;
+  --accent:#5fbf8a; --accent-ink:#0d1a12; --accent-soft:#1f3328;
+  --ribbon:#ef6b7d; --ribbon-soft:#3a1e24; --gold:#e0b45a; color-scheme: dark;
+}
+*{box-sizing:border-box}
+html,body{margin:0}
+body{background:var(--bg);color:var(--ink);font-family:var(--font-body);font-size:16px;line-height:1.5}
+.wrap{max-width:1100px;margin:0 auto;padding:28px 20px 60px;display:flex;flex-direction:column;gap:28px}
+h1,h2,h3{font-family:var(--font-display);text-wrap:balance;margin:0;line-height:1.15}
+h1{font-size:clamp(28px,4.5vw,42px);font-weight:800;letter-spacing:-.01em}
+h2{font-size:22px;font-weight:700}
+h3{font-size:17px;font-weight:600}
+p{margin:0}
+.muted{color:var(--muted)}
+/* Encabezado navideño: panel verde pino con nieve, guirnalda de luces y adornos colgantes */
+header{position:relative;overflow:hidden;border-radius:18px;padding:64px 28px 28px;
+  background:radial-gradient(circle at 85% 20%, rgba(255,214,120,.18), transparent 40%),radial-gradient(circle at 10% 90%, rgba(179,38,58,.35), transparent 45%),linear-gradient(160deg,#16452f,#0d2e1f);
+  color:#f6f1e4;display:grid;grid-template-columns:1fr auto;gap:24px;align-items:end;box-shadow:0 10px 30px rgba(13,46,31,.25)}
+header > *:not(canvas):not(.lights):not(.ornaments){position:relative;z-index:2}
+header canvas{position:absolute;inset:0;width:100%;height:100%;z-index:1;pointer-events:none}
+.lights{position:absolute;top:0;left:0;right:0;height:46px;z-index:2;pointer-events:none}
+.lights svg{width:100%;height:100%;display:block}
+.bulb{animation:twinkle 2.4s ease-in-out infinite}
+@keyframes twinkle{0%,100%{opacity:1}50%{opacity:.45}}
+.ornaments{position:absolute;right:300px;top:0;display:flex;gap:26px;z-index:2;pointer-events:none}
+.orn{display:flex;flex-direction:column;align-items:center;transform-origin:top center;animation:sway 4s ease-in-out infinite}
+.orn i{width:1px;background:rgba(246,241,228,.5);display:block}
+.orn b{width:22px;height:22px;border-radius:50%;display:block;box-shadow:inset -4px -5px 0 rgba(0,0,0,.18), inset 3px 3px 0 rgba(255,255,255,.25)}
+@keyframes sway{0%,100%{transform:rotate(-4deg)}50%{transform:rotate(4deg)}}
+header .intro{display:flex;flex-direction:column;gap:10px;max-width:62ch}
+header h1{color:#fffaf0;text-shadow:0 2px 0 rgba(0,0,0,.2)}
+header .muted{color:#d9e4da}
+.kicker{font-size:13px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--ribbon)}
+header .kicker{color:#f4c45a;display:flex;align-items:center;gap:8px}
+.meta{display:flex;flex-wrap:wrap;gap:8px 18px;font-size:15px;color:#d9e4da}
+.meta b{color:#fffaf0;font-weight:600}
+.progress{min-width:230px;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.22);backdrop-filter:blur(3px);border-radius:12px;padding:14px 16px;display:flex;flex-direction:column;gap:8px}
+.progress .lbl{font-size:14px;font-weight:600;color:#d9e4da}
+.progress .nums{font-family:var(--font-display);font-size:30px;font-weight:800;font-variant-numeric:tabular-nums;color:#fffaf0}
+.progress .nums small{font-size:15px;font-weight:600;color:#d9e4da}
+.bar{height:10px;border-radius:99px;background:rgba(255,255,255,.18);overflow:hidden}
+.bar span{display:block;height:100%;background:repeating-linear-gradient(-45deg,#d8314a 0 8px,#fff 8px 14px);width:0;transition:width .4s}
+.gifticon{width:18px;height:18px;flex:none}
+.pref{display:inline-flex;align-items:center;gap:8px;align-self:flex-start;background:rgba(244,196,90,.16);border:1px solid rgba(244,196,90,.55);color:#fff3d1;font-weight:700;padding:8px 14px;border-radius:99px}
+.consejos{background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:22px;display:flex;flex-direction:column;gap:16px;position:relative;overflow:hidden}
+.consejos::after{content:"";position:absolute;right:-30px;top:-30px;width:120px;height:120px;border-radius:50%;background:radial-gradient(circle,var(--ribbon-soft),transparent 70%)}
+.consejos h2{display:flex;align-items:center;gap:10px}
+.consejos h2 svg{width:24px;height:24px;color:var(--ribbon)}
+.tips{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px}
+.tip{display:flex;gap:12px;align-items:flex-start;padding:14px;border-radius:12px;background:var(--bg);border:1px solid var(--line)}
+.tip .ic{flex:none;width:40px;height:40px;border-radius:50%;display:grid;place-items:center;background:var(--accent-soft);color:var(--accent)}
+.tip .ic svg{width:22px;height:22px}
+.tip b{display:block;font-size:16px;margin-bottom:2px}
+.tip span{font-size:15px;color:var(--muted)}
+.tip.fecha{background:var(--ribbon-soft);border-color:var(--ribbon)}
+.tip.fecha .ic{background:var(--ribbon);color:#fff}
+.tip.fecha b{color:var(--ribbon)}
+footer{text-align:center;color:var(--muted);font-size:15px;display:flex;flex-direction:column;align-items:center;gap:8px}
+footer .script{font-family:var(--font-display);font-size:24px;font-weight:800;color:var(--ribbon)}
+.notice{padding:12px 16px;border-radius:10px;background:var(--ribbon-soft);color:var(--ink);border-left:4px solid var(--ribbon)}
+.notice.info{background:var(--accent-soft);border-left-color:var(--accent)}
+.hidden{display:none !important}
+
+.mine{background:var(--surface);border:1px solid var(--line);border-left:4px solid var(--gold);border-radius:12px;padding:16px 18px;display:flex;flex-direction:column;gap:12px}
+.mine ul{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:8px}
+.mine li{display:flex;flex-wrap:wrap;gap:6px 14px;align-items:center;justify-content:space-between;padding:10px 12px;border-radius:8px;background:var(--bg)}
+
+.toolbar{display:flex;flex-wrap:wrap;gap:10px;align-items:center}
+.toolbar input[type=search]{flex:1 1 240px}
+input,select,textarea{font:inherit;color:var(--ink);background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:9px 12px}
+textarea{width:100%;min-height:150px;font-family:ui-monospace,Consolas,monospace;font-size:14px}
+input:focus-visible,select:focus-visible,textarea:focus-visible,button:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+.chips{display:flex;gap:6px;flex-wrap:wrap}
+.chip{border:1px solid var(--line);background:var(--surface);color:var(--ink);border-radius:99px;padding:7px 14px;font:inherit;font-size:15px;cursor:pointer}
+.chip[aria-pressed=true]{background:var(--accent);color:var(--accent-ink);border-color:var(--accent)}
+
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:14px}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:20px 16px 16px;display:flex;flex-direction:column;gap:10px;position:relative;overflow:hidden;transition:transform .15s, box-shadow .15s}
+.card::before{content:"";position:absolute;top:0;left:0;right:0;height:6px;background:repeating-linear-gradient(-45deg,var(--ribbon) 0 8px,var(--surface) 8px 14px)}
+.card:hover{transform:translateY(-2px);box-shadow:0 8px 20px rgba(0,0,0,.08)}
+.card .num{font-family:var(--font-display);font-weight:800;font-size:13px;color:var(--ribbon);letter-spacing:.04em;font-variant-numeric:tabular-nums;display:flex;align-items:center;gap:6px}
+.card .name{font-family:var(--font-display);font-size:19px;font-weight:700;line-height:1.2;overflow-wrap:anywhere}
+.tags{display:flex;gap:6px;flex-wrap:wrap}
+.tag{font-size:13px;font-weight:600;padding:2px 9px;border-radius:99px;background:var(--accent-soft);color:var(--ink)}
+.idea{font-size:15px;color:var(--muted)}
+.idea b{color:var(--ink);font-weight:600}
+.card .actions{margin-top:auto}
+.btn{font:inherit;font-weight:700;border:0;border-radius:8px;padding:10px 16px;cursor:pointer;background:var(--accent);color:var(--accent-ink)}
+.btn:hover{filter:brightness(1.08)}
+.btn:disabled{opacity:.55;cursor:not-allowed}
+.btn.block{width:100%}
+.btn.ghost{background:transparent;color:var(--ink);border:1px solid var(--line)}
+.btn.danger{background:transparent;color:var(--ribbon);border:1px solid var(--ribbon)}
+.btn.small{padding:6px 11px;font-size:14px}
+.empty{padding:36px 20px;text-align:center;border:1px dashed var(--line);border-radius:12px;color:var(--muted)}
+
+/* Modal */
+.backdrop{position:fixed;inset:0;background:rgba(10,20,14,.55);display:flex;align-items:center;justify-content:center;padding:16px;z-index:10}
+.modal{background:var(--surface);color:var(--ink);border-radius:14px;max-width:460px;width:100%;padding:22px;display:flex;flex-direction:column;gap:14px;box-shadow:0 20px 60px rgba(0,0,0,.3)}
+.field{display:flex;flex-direction:column;gap:5px}
+.field label{font-weight:600;font-size:15px}
+.row{display:flex;gap:10px;justify-content:flex-end;flex-wrap:wrap}
+.msg{font-size:15px;min-height:1.2em}
+.msg.err{color:var(--ribbon)}
+.msg.ok{color:var(--accent)}
+
+/* Admin */
+.admin{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:18px;display:flex;flex-direction:column;gap:18px}
+.tabs{display:flex;gap:6px;flex-wrap:wrap;border-bottom:1px solid var(--line);padding-bottom:10px}
+.panel{display:flex;flex-direction:column;gap:12px}
+.tablewrap{overflow-x:auto;border:1px solid var(--line);border-radius:10px}
+table{border-collapse:collapse;width:100%;font-size:15px;font-variant-numeric:tabular-nums}
+th,td{text-align:left;padding:8px 10px;border-bottom:1px solid var(--line);vertical-align:top}
+th{background:var(--bg);font-weight:700;white-space:nowrap}
+tr:last-child td{border-bottom:0}
+.pill{display:inline-block;font-size:13px;font-weight:700;padding:1px 9px;border-radius:99px}
+.pill.ok{background:var(--accent-soft);color:var(--accent)}
+.pill.no{background:var(--ribbon-soft);color:var(--ribbon)}
+.cfg{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:12px}
+.toast{position:fixed;left:50%;bottom:22px;transform:translateX(-50%);background:var(--ink);color:var(--bg);padding:10px 18px;border-radius:99px;font-weight:600;z-index:20;max-width:calc(100% - 32px)}
+@media (max-width:760px){header{grid-template-columns:1fr;padding:60px 18px 22px}.progress{min-width:0}.ornaments{right:20px}}
+@media (prefers-reduced-motion:reduce){*{transition:none !important;animation:none !important}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <canvas id="nieve" aria-hidden="true"></canvas>
+    <div class="lights" id="luces" aria-hidden="true"></div>
+    <div class="ornaments" aria-hidden="true">
+      <span class="orn" style="animation-delay:-1s"><i style="height:30px"></i><b style="background:#d8314a"></b></span>
+      <span class="orn" style="animation-delay:-2.5s"><i style="height:48px"></i><b style="background:#f4c45a"></b></span>
+      <span class="orn" style="animation-delay:-.4s"><i style="height:22px"></i><b style="background:#e9edf0"></b></span>
+    </div>
+    <div class="intro">
+      <span class="kicker"><svg class="gifticon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="8" width="18" height="4" rx="1"/><path d="M12 8v13M19 12v7a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2v-7M7.5 8a2.5 2.5 0 0 1 0-5C10 3 12 8 12 8s2-5 4.5-5a2.5 2.5 0 0 1 0 5"/></svg>Campaña solidaria de Navidad</span>
+      <h1 id="titulo">Regalos de Navidad para niños</h1>
+      <p id="mensaje" class="muted">Elige a un niño o niña de la lista y comprométete con su regalo. Cuando lo eliges, desaparece de la lista para el resto, así nadie repite.</p>
+      <p class="pref"><svg class="gifticon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>Entrega tu regalo hasta el miércoles 9 de diciembre</p>
+    </div>
+    <div class="progress" aria-live="polite">
+      <span class="lbl">Regalos comprometidos</span>
+      <span class="nums" id="nums">0 <small>de 0</small></span>
+      <div class="bar"><span id="barfill"></span></div>
+    </div>
+  </header>
+
+  <section class="consejos" aria-labelledby="cons-t">
+    <h2 id="cons-t"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 2l2.9 6.9L22 9.3l-5.5 4.8L18.2 22 12 18.3 5.8 22l1.7-7.9L2 9.3l7.1-.4z"/></svg>Recomendaciones para tu regalo</h2>
+    <div class="tips">
+      <div class="tip fecha"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18M8 14h.01M12 14h.01M16 14h.01"/></svg></span><div><b>Entrega hasta el miércoles 9 de diciembre</b><span>Necesitamos reunir todos los regalos ese día para que lleguen a tiempo a cada niño.</span></div></div>
+      <div class="tip"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 18h6M10 22h4M12 2a7 7 0 0 0-4 12.7c.6.5 1 1.2 1 2V18h6v-1.3c0-.8.4-1.5 1-2A7 7 0 0 0 12 2z"/></svg></span><div><b>Juguetes didácticos y sin pilas</b><span>Juegos de construcción, de mesa, de arte, puzles o libros: regalos para crear, imaginar y compartir.</span></div></div>
+      <div class="tip"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 4h16v16H4z"/><path d="M4 4l8 8 8-8"/></svg></span><div><b>Puedes incluir una carta</b><span>Unas palabras de cariño o una tarjeta hecha a mano hacen que el regalo sea todavía más especial.</span></div></div>
+      <div class="tip"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="8" width="18" height="4" rx="1"/><path d="M12 8v13M19 12v7a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2v-7M7.5 8a2.5 2.5 0 0 1 0-5C10 3 12 8 12 8s2-5 4.5-5a2.5 2.5 0 0 1 0 5"/></svg></span><div><b>Envuélvelo e identifícalo</b><span>Pega en el paquete el número y el nombre del niño o niña, para que llegue a las manos correctas.</span></div></div>
+    </div>
+  </section>
+
+  <div id="estado" class="notice info">Cargando la lista…</div>
+
+  <section id="misCompromisos" class="mine hidden" aria-labelledby="mc-t">
+    <h2 id="mc-t">Mis compromisos</h2>
+    <ul id="misLista"></ul>
+  </section>
+
+  <section style="display:flex;flex-direction:column;gap:14px" aria-labelledby="disp-t">
+    <div style="display:flex;flex-wrap:wrap;gap:6px 14px;align-items:baseline;justify-content:space-between">
+      <h2 id="disp-t">Niños disponibles</h2>
+      <span class="muted" id="dispCount"></span>
+    </div>
+    <div class="toolbar">
+      <input type="search" id="buscar" placeholder="Buscar por nombre, número o idea de regalo" aria-label="Buscar">
+      <div class="chips" role="group" aria-label="Filtrar por sexo">
+        <button class="chip" data-sexo="" aria-pressed="true">Todos</button>
+        <button class="chip" data-sexo="F" aria-pressed="false">Niñas</button>
+        <button class="chip" data-sexo="M" aria-pressed="false">Niños</button>
+      </div>
+      <select id="edad" aria-label="Filtrar por edad">
+        <option value="">Todas las edades</option>
+        <option value="0-3">0 a 3 años</option>
+        <option value="4-6">4 a 6 años</option>
+        <option value="7-9">7 a 9 años</option>
+        <option value="10-12">10 a 12 años</option>
+        <option value="13-99">13 años o más</option>
+      </select>
+    </div>
+    <div class="grid" id="grid"></div>
+    <div class="empty hidden" id="vacio"></div>
+  </section>
+
+
+  <footer>
+    <span class="script">¡Feliz Navidad!</span>
+    <span>Gracias por regalar una sonrisa esta Navidad.</span>
+  </footer>
+</div>
+
+<div class="backdrop hidden" id="modal" role="dialog" aria-modal="true" aria-labelledby="m-t">
+  <form class="modal" id="form">
+    <div style="display:flex;flex-direction:column;gap:4px">
+      <span class="kicker" id="mNum"></span>
+      <h2 id="m-t">Comprometer regalo</h2>
+      <p class="muted" id="mDetalle"></p>
+    </div>
+    <div class="field">
+      <label for="fNombre">Nombre completo</label>
+      <input id="fNombre" required maxlength="100" autocomplete="name" placeholder="Nombre y apellidos">
+    </div>
+    <div class="field">
+      <label for="fUnidad">Fiscalía o unidad</label>
+      <input id="fUnidad" required maxlength="100" placeholder="Ej.: Fiscalía Local de Temuco">
+    </div>
+    <p class="msg" id="mMsg" role="status"></p>
+    <div class="row">
+      <button type="button" class="btn ghost" id="mCancelar">Cancelar</button>
+      <button type="submit" class="btn" id="mOk">Confirmar mi regalo</button>
+    </div>
+  </form>
+</div>
+
+<div class="toast hidden" id="toast" role="status"></div>
+
+<script>
+// ===== CONFIGURACIÓN: pega aquí la URL de tu implementación de Apps Script =====
+const API = "https://script.google.com/macros/s/AKfycbxzJZmlokMVpQf6Le73z6_UGM8VckuYfOvKxXxhK94cloK9DLIkLhqFCThJm6esdKKW/exec";
+// ==============================================================================
+(() => {
+  const $ = (id) => document.getElementById(id);
+  const esc = (s) => String(s ?? "").replace(/[&<>"']/g, c => ({ "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;" }[c]));
+  const store = {
+    get(k) { try { return localStorage.getItem(k) || ""; } catch { return ""; } },
+    set(k, v) { try { localStorage.setItem(k, v); } catch {} }
+  };
+  let token = store.get("regalos-token");
+  if (!token) { token = Array.from(crypto.getRandomValues(new Uint8Array(16)), b => b.toString(16).padStart(2, "0")).join(""); store.set("regalos-token", token); }
+
+  let ninos = [], cargado = false, actual = null;
+  let filtro = { q: "", sexo: "", edad: "" };
+
+  function toast(t) {
+    const el = $("toast"); el.textContent = t; el.classList.remove("hidden");
+    clearTimeout(toast._t); toast._t = setTimeout(() => el.classList.add("hidden"), 3500);
+  }
+  const sexoTxt = (s) => s === "F" ? "Niña" : s === "M" ? "Niño" : "";
+  const edadTxt = (e) => (e === "" || e == null) ? "" : (Number(e) === 1 ? "1 año" : e + " años");
+  const gift = '<svg class="gifticon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="8" width="18" height="4" rx="1"/><path d="M12 8v13M19 12v7a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2v-7M7.5 8a2.5 2.5 0 0 1 0-5C10 3 12 8 12 8s2-5 4.5-5a2.5 2.5 0 0 1 0 5"/></svg>';
+
+  async function api(body) {
+    const r = await fetch(API, { method: "POST", headers: { "Content-Type": "text/plain;charset=utf-8" }, body: JSON.stringify(body) });
+    return r.json();
+  }
+
+  async function cargar() {
+    try {
+      const r = await fetch(API + "?accion=lista&token=" + encodeURIComponent(token), { cache: "no-store" });
+      const j = await r.json();
+      if (!j.ok) throw new Error();
+      ninos = j.ninos.sort((a, b) => a.num - b.num);
+      cargado = true;
+      $("estado").classList.add("hidden");
+      render();
+    } catch {
+      $("estado").className = "notice";
+      $("estado").textContent = "No se pudo cargar la lista. Revisa tu conexión; la página volverá a intentarlo en unos segundos.";
+      $("estado").classList.remove("hidden");
+    }
+  }
+
+  function render() {
+    const total = ninos.length;
+    const hechos = ninos.filter(n => n.tomado).length;
+    $("nums").innerHTML = `${hechos} <small>de ${total}</small>`;
+    $("barfill").style.width = total ? (100 * hechos / total) + "%" : "0";
+
+    const mios = ninos.filter(n => n.mio);
+    $("misCompromisos").classList.toggle("hidden", mios.length === 0);
+    $("misLista").innerHTML = mios.map(n => `
+      <li><span><b>N° ${esc(n.num)} · ${esc(n.nombre)}</b> <span class="muted">${esc([sexoTxt(n.sexo), edadTxt(n.edad)].filter(Boolean).join(", "))}</span></span>
+      <button class="btn danger small" data-liberar="${esc(n.num)}">Ya no puedo, liberar</button></li>`).join("");
+
+    const q = filtro.q.trim().toLowerCase();
+    const disp = ninos.filter(n => !n.tomado);
+    const vis = disp.filter(n => {
+      if (filtro.sexo && n.sexo !== filtro.sexo) return false;
+      if (filtro.edad) {
+        const [a, b] = filtro.edad.split("-").map(Number); const e = Number(n.edad);
+        if (isNaN(e) || e < a || e > b) return false;
+      }
+      if (q && !`${n.num} ${n.nombre}`.toLowerCase().includes(q)) return false;
+      return true;
+    });
+    $("dispCount").textContent = total ? `${disp.length} sin regalo comprometido` : "";
+    $("grid").innerHTML = vis.map(n => `
+      <article class="card">
+        <span class="num">${gift}N° ${esc(n.num)}</span>
+        <span class="name">${esc(n.nombre)}</span>
+        <div class="tags">${n.sexo ? `<span class="tag">${sexoTxt(n.sexo)}</span>` : ""}${n.edad !== "" ? `<span class="tag">${edadTxt(n.edad)}</span>` : ""}</div>
+        <div class="actions"><button class="btn block" data-elegir="${esc(n.num)}">Quiero regalarle</button></div>
+      </article>`).join("");
+    const vacio = $("vacio");
+    if (!cargado) vacio.classList.add("hidden");
+    else if (total && disp.length === 0) { vacio.textContent = "¡Todos los niños ya tienen un regalo comprometido! Gracias a cada una de las personas que participaron."; vacio.classList.remove("hidden"); }
+    else if (total && vis.length === 0) { vacio.textContent = "Ningún niño disponible coincide con estos filtros."; vacio.classList.remove("hidden"); }
+    else vacio.classList.add("hidden");
+  }
+
+  function abrir(num) {
+    const n = ninos.find(x => String(x.num) === String(num)); if (!n) return;
+    actual = n;
+    $("mNum").textContent = "N° " + n.num;
+    $("m-t").textContent = n.nombre;
+    $("mDetalle").textContent = [sexoTxt(n.sexo), edadTxt(n.edad)].filter(Boolean).join(" · ");
+    if (!$("fNombre").value) $("fNombre").value = store.get("regalos-nombre");
+    if (!$("fUnidad").value) $("fUnidad").value = store.get("regalos-unidad");
+    $("mMsg").textContent = ""; $("mMsg").className = "msg";
+    $("mOk").disabled = false;
+    $("modal").classList.remove("hidden");
+    setTimeout(() => $("fNombre").focus(), 30);
+  }
+  function cerrar() { $("modal").classList.add("hidden"); actual = null; }
+
+  $("form").addEventListener("submit", async (e) => {
+    e.preventDefault();
+    if (!actual) return;
+    const nombre = $("fNombre").value.trim();
+    const unidad = $("fUnidad").value.trim();
+    if (!nombre || !unidad) { $("mMsg").textContent = "Completa tu nombre completo y tu fiscalía o unidad."; $("mMsg").className = "msg err"; return; }
+    $("mOk").disabled = true; $("mMsg").textContent = "Guardando…"; $("mMsg").className = "msg";
+    const n = actual;
+    try {
+      const r = await api({ accion: "reservar", num: n.num, nombre, fiscalia: unidad, token });
+      if (r.ok) {
+        store.set("regalos-nombre", nombre); store.set("regalos-unidad", unidad);
+        cerrar(); toast("¡Gracias! Quedaste comprometido con el regalo de " + n.nombre + ".");
+      } else if (r.motivo === "tomado") {
+        $("mMsg").textContent = "Otra persona alcanzó a elegir a este niño justo antes que tú. Por favor, elige a otro de la lista."; $("mMsg").className = "msg err";
+      } else if (r.motivo === "ocupado") {
+        $("mMsg").textContent = "Hay mucha gente eligiendo en este momento. Inténtalo de nuevo en unos segundos."; $("mMsg").className = "msg err"; $("mOk").disabled = false;
+      } else {
+        $("mMsg").textContent = "No se pudo guardar. Revisa los datos e inténtalo otra vez."; $("mMsg").className = "msg err"; $("mOk").disabled = false;
+      }
+    } catch {
+      $("mMsg").textContent = "No se pudo guardar tu regalo. Revisa tu conexión e inténtalo otra vez."; $("mMsg").className = "msg err"; $("mOk").disabled = false;
+    }
+    cargar();
+  });
+  $("mCancelar").addEventListener("click", cerrar);
+  $("modal").addEventListener("click", (e) => { if (e.target === $("modal")) cerrar(); });
+  document.addEventListener("keydown", (e) => { if (e.key === "Escape" && !$("modal").classList.contains("hidden")) cerrar(); });
+
+  const pendiente = new Set();
+  document.addEventListener("click", async (e) => {
+    const b = e.target.closest("button"); if (!b) return;
+    if (b.dataset.elegir) { abrir(b.dataset.elegir); return; }
+    if (b.dataset.liberar) {
+      const num = b.dataset.liberar;
+      if (!pendiente.has(num)) { pendiente.add(num); b.textContent = "¿Confirmas? Clic de nuevo"; setTimeout(() => { pendiente.delete(num); render(); }, 4000); return; }
+      pendiente.delete(num); b.disabled = true;
+      try { const r = await api({ accion: "liberar", num: Number(num), token }); toast(r.ok ? "El niño volvió a quedar disponible." : "No se pudo liberar."); }
+      catch { toast("No se pudo liberar. Inténtalo de nuevo."); }
+      cargar(); return;
+    }
+    if (b.dataset.sexo !== undefined && b.closest(".toolbar")) {
+      filtro.sexo = b.dataset.sexo;
+      document.querySelectorAll(".toolbar .chip").forEach(c => c.setAttribute("aria-pressed", String(c === b)));
+      render();
+    }
+  });
+  $("buscar").addEventListener("input", (e) => { filtro.q = e.target.value; render(); });
+  $("edad").addEventListener("change", (e) => { filtro.edad = e.target.value; render(); });
+
+  // Guirnalda y nieve
+  (function luces() {
+    const cols = ["#ff4d5e", "#ffd25a", "#5be08f", "#5fb8ff", "#ff9a3d"];
+    const n = 28; let path = "M0 6", bulbs = "";
+    for (let i = 0; i <= n; i++) {
+      const x = (i / n) * 1000, y = 6 + (i % 2 ? 14 : 0);
+      if (i) path += ` Q ${x - 1000 / n / 2} 26 ${x} ${y}`;
+      const c = cols[i % cols.length];
+      bulbs += `<g class="bulb" style="animation-delay:${(i % 5) * -0.45}s"><rect x="${x - 2.5}" y="${y}" width="5" height="4" fill="#3b4a40"/><ellipse cx="${x}" cy="${y + 10}" rx="5" ry="7" fill="${c}"/><ellipse cx="${x}" cy="${y + 10}" rx="10" ry="12" fill="${c}" opacity=".18"/></g>`;
+    }
+    $("luces").innerHTML = `<svg viewBox="0 0 1000 46" preserveAspectRatio="none"><path d="${path}" stroke="#2c3b31" stroke-width="2" fill="none"/>${bulbs}</svg>`;
+  })();
+  (function nieve() {
+    const cv = $("nieve"), ctx = cv.getContext("2d");
+    const reduce = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    let w = 0, h = 0, copos = [];
+    function size() {
+      const r = cv.getBoundingClientRect(), d = window.devicePixelRatio || 1;
+      w = r.width; h = r.height; cv.width = w * d; cv.height = h * d; ctx.setTransform(d, 0, 0, d, 0, 0);
+      copos = Array.from({ length: Math.round(w * h / 5000) }, () => ({ x: Math.random() * w, y: Math.random() * h, r: 0.8 + Math.random() * 2.2, v: 0.25 + Math.random() * 0.6, o: Math.random() * 6.28 }));
+    }
+    function dibujar() { ctx.clearRect(0, 0, w, h); ctx.fillStyle = "rgba(255,255,255,.85)"; for (const c of copos) { ctx.beginPath(); ctx.arc(c.x, c.y, c.r, 0, 6.283); ctx.fill(); } }
+    function paso() { for (const c of copos) { c.y += c.v; c.o += 0.01; c.x += Math.sin(c.o) * 0.3; if (c.y > h + 4) { c.y = -4; c.x = Math.random() * w; } } dibujar(); requestAnimationFrame(paso); }
+    size(); window.addEventListener("resize", size);
+    if (reduce) dibujar(); else requestAnimationFrame(paso);
+  })();
+
+  render();
+  if (API.startsWith("PEGA_AQUI")) {
+    $("estado").className = "notice";
+    $("estado").textContent = "Falta configurar la dirección de Apps Script en el archivo index.html.";
+  } else {
+    cargar();
+    setInterval(cargar, 20000);
+    document.addEventListener("visibilitychange", () => { if (!document.hidden) cargar(); });
+  }
+})();
+</script>
+</body>
+</html>
