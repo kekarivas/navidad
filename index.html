@@ -83,6 +83,13 @@ header .kicker{color:#f4c45a;display:flex;align-items:center;gap:8px}
 .tip.fecha{background:var(--ribbon-soft);border-color:var(--ribbon)}
 .tip.fecha .ic{background:var(--ribbon);color:#fff}
 .tip.fecha b{color:var(--ribbon)}
+.gracias{text-align:center;align-items:center;gap:12px;border-top:6px solid var(--ribbon)}
+.gracias .corazon{width:58px;height:58px;border-radius:50%;display:grid;place-items:center;background:var(--ribbon);color:#fff;box-shadow:0 0 0 7px var(--ribbon-soft)}
+.gracias .corazon svg{width:30px;height:30px}
+.gracias h2{font-size:26px}
+.gracias .para{font-family:var(--font-display);font-weight:700;color:var(--accent);font-size:18px}
+.gracias .recordar{background:var(--bg);border:1px solid var(--line);border-radius:10px;padding:10px 14px;font-size:15px;text-align:left;width:100%}
+.gracias .recordar b{color:var(--ribbon)}
 footer{text-align:center;color:var(--muted);font-size:15px;display:flex;flex-direction:column;align-items:center;gap:8px}
 footer .script{font-family:var(--font-display);font-size:24px;font-weight:800;color:var(--ribbon)}
 .notice{padding:12px 16px;border-radius:10px;background:var(--ribbon-soft);color:var(--ink);border-left:4px solid var(--ribbon)}
@@ -163,7 +170,7 @@ tr:last-child td{border-bottom:0}
     <div class="intro">
       <span class="kicker"><svg class="gifticon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="8" width="18" height="4" rx="1"/><path d="M12 8v13M19 12v7a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2v-7M7.5 8a2.5 2.5 0 0 1 0-5C10 3 12 8 12 8s2-5 4.5-5a2.5 2.5 0 0 1 0 5"/></svg>Campaña solidaria de Navidad</span>
       <h1 id="titulo">Regalos de Navidad</h1>
-      <p       <p id="mensaje" class="muted">Esta Navidad, 74 niños y niñas esperan una sorpresa pensada especialmente para ellos. Tu regalo puede ser un juguete, pero sobre todo es la certeza de que alguien pensó en ellos. Elige a un niño o niña, comprométete con su regalo y ayúdanos a que ninguno se quede sin su momento de alegría.</p>
+      <p id="mensaje" class="muted">Esta Navidad, 74 niños y niñas esperan una sorpresa pensada especialmente para ellos. Tu regalo puede ser un juguete, pero sobre todo es la certeza de que alguien pensó en ellos. Elige a un niño o niña, comprométete con su regalo y ayúdanos a que ninguno se quede sin su momento de alegría.</p>
       <p class="pref"><svg class="gifticon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>Entrega tu regalo hasta el miércoles 9 de diciembre</p>
     </div>
     <div class="progress" aria-live="polite">
@@ -192,7 +199,7 @@ tr:last-child td{border-bottom:0}
 
   <section style="display:flex;flex-direction:column;gap:14px" aria-labelledby="disp-t">
     <div style="display:flex;flex-wrap:wrap;gap:6px 14px;align-items:baseline;justify-content:space-between">
-      <h2 id="disp-t">Niños disponibles</h2>
+      <h2 id="disp-t">Niños y niñas disponibles</h2>
       <span class="muted" id="dispCount"></span>
     </div>
     <div class="toolbar">
@@ -243,6 +250,17 @@ tr:last-child td{border-bottom:0}
       <button type="submit" class="btn" id="mOk">Confirmar mi regalo</button>
     </div>
   </form>
+</div>
+
+<div class="backdrop hidden" id="gracias" role="dialog" aria-modal="true" aria-labelledby="g-t">
+  <div class="modal gracias">
+    <span class="corazon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 21s-7.5-4.6-9.6-9.2C.9 8.4 3 4.5 6.7 4.5c2.1 0 3.6 1.2 4.3 2.4h2c.7-1.2 2.2-2.4 4.3-2.4 3.7 0 5.8 3.9 4.3 7.3C19.5 16.4 12 21 12 21z"/></svg></span>
+    <h2 id="g-t">¡Gracias de corazón!</h2>
+    <p class="para" id="gPara"></p>
+    <p class="muted">Detrás de tu regalo hay un niño o una niña que esta Navidad va a sentir que alguien pensó especialmente en él o en ella. Tu gesto, por pequeño que parezca, deja una huella enorme. Gracias por ser parte de esta cadena de cariño.</p>
+    <div class="recordar">Recuerda entregar tu regalo <b>hasta el miércoles 9 de diciembre</b>, envuelto y con el número y nombre del niño o niña. Si quieres, súmale una carta.</div>
+    <button type="button" class="btn" id="gCerrar">¡Feliz Navidad!</button>
+  </div>
 </div>
 
 <div class="toast hidden" id="toast" role="status"></div>
@@ -327,7 +345,7 @@ const API = "https://script.google.com/macros/s/AKfycbxzJZmlokMVpQf6Le73z6_UGM8V
     const vacio = $("vacio");
     if (!cargado) vacio.classList.add("hidden");
     else if (total && disp.length === 0) { vacio.textContent = "¡Todos los niños ya tienen un regalo comprometido! Gracias a cada una de las personas que participaron."; vacio.classList.remove("hidden"); }
-    else if (total && vis.length === 0) { vacio.textContent = "Ningún niño disponible coincide con estos filtros."; vacio.classList.remove("hidden"); }
+    else if (total && vis.length === 0) { vacio.textContent = "Ningún niño o niña disponible coincide con estos filtros."; vacio.classList.remove("hidden"); }
     else vacio.classList.add("hidden");
   }
 
@@ -358,7 +376,7 @@ const API = "https://script.google.com/macros/s/AKfycbxzJZmlokMVpQf6Le73z6_UGM8V
       const r = await api({ accion: "reservar", num: n.num, nombre, fiscalia: unidad, token });
       if (r.ok) {
         store.set("regalos-nombre", nombre); store.set("regalos-unidad", unidad);
-        cerrar(); toast("¡Gracias! Quedaste comprometido con el regalo de " + n.nombre + ".");
+        cerrar(); $("gPara").textContent = "Quedaste comprometido con el regalo de " + n.nombre + " (N° " + n.num + ")."; $("gracias").classList.remove("hidden"); setTimeout(() => $("gCerrar").focus(), 30);
       } else if (r.motivo === "tomado") {
         $("mMsg").textContent = "Otra persona alcanzó a elegir a este niño justo antes que tú. Por favor, elige a otro de la lista."; $("mMsg").className = "msg err";
       } else if (r.motivo === "ocupado") {
@@ -372,6 +390,10 @@ const API = "https://script.google.com/macros/s/AKfycbxzJZmlokMVpQf6Le73z6_UGM8V
     cargar();
   });
   $("mCancelar").addEventListener("click", cerrar);
+  const cerrarGracias = () => $("gracias").classList.add("hidden");
+  $("gCerrar").addEventListener("click", cerrarGracias);
+  $("gracias").addEventListener("click", (e) => { if (e.target === $("gracias")) cerrarGracias(); });
+  document.addEventListener("keydown", (e) => { if (e.key === "Escape") cerrarGracias(); });
   $("modal").addEventListener("click", (e) => { if (e.target === $("modal")) cerrar(); });
   document.addEventListener("keydown", (e) => { if (e.key === "Escape" && !$("modal").classList.contains("hidden")) cerrar(); });
 
